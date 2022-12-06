@@ -386,7 +386,7 @@
                                 <br>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                    <button class="btn btn-primary" type="buttom"  id="submit_edit"  name="submit_edit">Thêm hồ sơ giấy phép lái xe</button>
+                                    <button class="btn btn-primary" type="buttom"  id="submit_edit"  name="submit_edit">Sửa hồ sơ giấy phép lái xe</button>
                                 </div>
                             </div>
                         </form>
