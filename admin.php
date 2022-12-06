@@ -41,7 +41,6 @@
         $up_diemLT = $_POST['up_diemLT'];
         $up_diemTH =$_POST['up_diemTH'];
         $sua = "update HoSoGPLX set MaHang = '$up_MaHang', NgayCapGPLX = '$up_NgayCap', NgayHetHanGPLX = '$up_NgayHetHan', DiemLT = '$up_diemLT', DiemTH = '$up_diemTH', MaTT = '$up_ma' where MaGPLX = '$up_MaGPLX'";
-        echo ($sua);
         $kq = sqlsrv_query( $conn, $sua);
         if(($kq)   !== false) 
         {
