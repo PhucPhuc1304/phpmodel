@@ -1,6 +1,6 @@
 <?php
-session_start();
-?>
+    session_start();
+    ?>
 <?php
     include("config.php");
     if(isset($_POST['submit_add'])) {
@@ -18,7 +18,7 @@ session_start();
         if (($kq) !== false) {
             echo "<script>alert('Thêm hồ sơ thành công');</script>";
             echo "<script>window.location.href ='admin.php'</script>";
-
+    
         } else {
             echo "<script>alert('Sai thông tin. Vui lòng nhập lại');</script>";
         }
@@ -28,25 +28,25 @@ session_start();
             echo "<script>alert('Vui lòng đăng nhập');</script>" ;
         }
     }
-
+    
     if(isset($_POST['submit_edit']))
     {
         if (isset($_SESSION['username'])) {
-
-        $MaGPLX = $_POST['SoGPLX'];
-        $SoCMND = $_POST['SoCMND'];
-        $MaHang = $_POST['MaHang'];
-        $NgayCap = $_POST['dateCap'];
-        $NgayHetHan = $_POST['dateHan'];
-        $ma = $_POST['MaTT'];
-        $DiemLT = $_POST['diemLT'];
-        $DiemTH =$_POST['diemTH'];
-        $them = "insert into HoSoGPLX values('$MaGPLX','$SoCMND','$MaHang','$NgayCap','$NgayHetHan','$ma','$DiemLT','$DiemTH')";
-        $kq = sqlsrv_query( $conn, $them);
+    
+        $up_MaGPLX = $_POST['up_SoGPLX'];
+        $up_MaHang = $_POST['up_MaHang'];
+        $up_NgayCap = $_POST['up_dateCap'];
+        $up_NgayHetHan = $_POST['up_dateHan'];
+        $up_ma = $_POST['up_MaTT'];
+        $up_diemLT = $_POST['up_diemLT'];
+        $up_diemTH =$_POST['up_diemTH'];
+        $sua = "update HoSoGPLX set MaHang = '$up_MaHang', NgayCapGPLX = '$up_NgayCap', NgayHetHanGPLX = '$up_NgayHetHan', DiemLT = '$up_diemLT', DiemTH = '$up_diemTH', MaTT = '$up_ma' where MaGPLX = '$up_MaGPLX'";
+        echo ($sua);
+        $kq = sqlsrv_query( $conn, $sua);
         if(($kq)   !== false) 
         {
-            echo "<script>alert('Thêm hồ sơ thành công');</script>" ;
-            echo "<script>window.location.href ='login.php'</script>";
+            echo "<script>alert('Chỉnh sửa hồ sơ thành công');</script>" ;
+            echo "<script>window.location.href ='admin.php'</script>";
             
         }
         else
@@ -59,9 +59,33 @@ session_start();
         echo "<script>alert('Vui lòng đăng nhập');</script>" ;
     }
     }
+    
+    
+    if(isset($_POST['submit_del']))
+    {
+        if (isset($_SESSION['username'])) {
+    
+        $del_maGPLX = $_POST['id_del_text'];
+        $xoa = "EXEC proc_XoaHoSoGPLX '$del_maGPLX'";
+        $kq = sqlsrv_query( $conn, $xoa);
+        if(($kq)   !== false) 
+        {
+            echo "<script>alert('Xóa hồ sơ thành công');</script>" ;
+            echo "<script>window.location.href ='admin.php'</script>";
+            
+        }
+        else
+        {
+            echo "<script>alert('Sai thông tin xóa');</script>" ;
+        }
+    }
+    else
+    {
+        echo "<script>alert('Vui lòng đăng nhập');</script>" ;
+    }
+    }
+    
     ?>
-
-
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -96,8 +120,7 @@ session_start();
             padding:12px; 
             }
             .table {
-                zoom: 80%;
-
+            zoom: 80%;
             }
         </style>
     </head>
@@ -121,18 +144,18 @@ session_start();
                     <i class="ti ti-unlock"></i>
                     <i class="ti ti-search"></i>
                     <i class="ti ">Xin chào  <?= htmlspecialchars($_SESSION['username']) ?> </i>
-                    
                 </div>
             </div>
         </div>
         <!-- thanh fotter -->
         <!-- tiêu đề  -->
         <div class="col text-center">
-            <br><h2>Hệ thống quản lý giấy phép lái xe</h2>
+            <br>
+            <h2>Hệ thống quản lý giấy phép lái xe</h2>
             <br><button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modelAdd">
             Thêm hồ sơ
             </button>
-           <a type="button"  href="logout.php" class="btn btn-danger" >Đăng xuất</a><br>
+            <a type="button"  href="logout.php" class="btn btn-danger" >Đăng xuất</a><br>
         </div>
         <!-- tiêu đề -->
         <!-- Modal -->
@@ -256,9 +279,7 @@ session_start();
             </div>
         </div>
         <!--MODEL ADĐ-->
-
-
-
+        <!-- Modal -->
         <!-- Modal -->
         <div class="modal fade" id="modelEdit" tabindex="-1" aria-labelledby="modelEdit" aria-hidden="true">
             <div class="modal-dialog modal-lg modal-dialog-centered">
@@ -271,28 +292,22 @@ session_start();
                         <form name="form1" action=""  method="post">
                             <div class="container" style="width: 750px;">
                                 <label>
-                                    <h6>Nhập số CMND/CCCD :</h6>
-                                </label>
-                                <input type="text" name="SoCMND" id="SoCMND" class="form-control" placeholder="Vui lòng nhập số CMND hoặc CCCD" />
-                                <div id="listCMND"></div>
-                                <br />
-                                <label>
                                     <h6>Họ và tên :</h6>
                                 </label>
-                                <select id="test" class="form-select" disabled> </select>
+                                <input type="text" name="up_Name" id="up_Name" class="form-control" readonly />
                                 <br />
                                 <div class="row">
                                     <div class="col-md-6">
                                         <label class="form-label">
-                                            <h6>Nhập số GPLX :</h6>
+                                            <h6>Số GPLX :</h6>
                                         </label>
-                                        <input type="number" name="SoGPLX" id="SoGPLX" class="form-control" placeholder="Vui lòng nhập số giấy phép lái xe" />
+                                        <input type="number" name="up_SoGPLX" id="up_SoGPLX" class="form-control" readonly />
                                     </div>
                                     <div class="col-md-6">
                                         <label class="form-label">
                                             <h6>Hạng :</h6>
                                         </label>
-                                        <select class="form-select" id="MaHang" name="MaHang">
+                                        <select class="form-select" id="up_MaHang" name="up_MaHang">
                                             <option value="0"></option>
                                             <?php
                                                 $sql = "Select MaHang  from HangGPLX;";
@@ -314,13 +329,13 @@ session_start();
                                         <label class="form-label">
                                             <h6>Ngày cấp :</h6>
                                         </label>
-                                        <input type="date" class="form-control" id="dateCap" name="dateCap" />
+                                        <input type="date" class="form-control" id="up_dateCap" name="up_dateCap" />
                                     </div>
                                     <div class="col-md-6">
                                         <label class="form-label">
                                             <h6>Ngày hết hạn</h6>
                                         </label>
-                                        <input type="date" class="form-control" id="dateHan" name="dateHan" />
+                                        <input type="date" class="form-control" id="up_dateHan" name="up_dateHan" />
                                     </div>
                                 </div>
                                 <br />
@@ -329,13 +344,13 @@ session_start();
                                         <label class="form-label">
                                             <h6>Điểm lý thuyết :</h6>
                                         </label>
-                                        <input type="number" class="form-control" id="diemLT" name="diemLT" />
+                                        <input type="number" class="form-control" id="up_diemLT" name="up_diemLT" />
                                     </div>
                                     <div class="col-md-6">
                                         <label class="form-label">
                                             <h6>Điểm thực hành :</h6>
                                         </label>
-                                        <input type="number" class="form-control" id="diemTH" name="diemTH" />
+                                        <input type="number" class="form-control" id="up_diemTH" name="up_diemTH" />
                                     </div>
                                 </div>
                                 <br />
@@ -345,7 +360,7 @@ session_start();
                                             <h6>Trung tâm sát hạch :</h6>
                                         </label>
                                         <br />
-                                        <select class="form-select" onchange="GetTT()" id="TT" name="TT">
+                                        <select class="form-select" onchange="GetTT_Update()" id="up_TT" name="up_TT">
                                             <option></option>
                                             <?php
                                                 $sql = "Select TenTT  from TrungTamSatHach;";
@@ -365,24 +380,21 @@ session_start();
                                         <label>
                                             <h6>­</h6>
                                         </label>
-                                        <select class="form-select" id="MaTT" name="MaTT" readonly> </select>
+                                        <select class="form-select" id="up_MaTT" name="up_MaTT" readonly> </select>
                                     </div>
-                                    <br>
                                 </div>
+                                <br>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                    <button class="btn btn-primary" type="buttom"  id="submit_edit"  name="submit_edit">Sửa</button>
-
+                                    <button class="btn btn-primary" type="buttom"  id="submit_edit"  name="submit_edit">Thêm hồ sơ giấy phép lái xe</button>
                                 </div>
-                    
                             </div>
                         </form>
                     </div>
                 </div>
             </div>
         </div>
-         <!-- Modal -->
-
+        <!-- Modal -->
         <!-- Modal -->
         <div class="modal fade" id="modelDel" tabindex="-1" aria-labelledby="modelDel" aria-hidden="true">
             <div class="modal-dialog modal-lg modal-dialog-centered">
@@ -392,82 +404,81 @@ session_start();
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        <h4>Bạn có muốn xóa hồ sơ có mã số : xxxxx</h4>
-
-                        <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                    <button class="btn btn-danger" type="buttom"  id="submit_edit"  name="submit_edit">Xóa</button>
-                        </div>
+                        <form name="form1" action=""  method="post">
+                            <div id = 'id_del'></div>
+                            <input type="text" class="form-control" id="id_del_text" name="id_del_text" hidden/>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                <button class="btn btn-danger" type="buttom"  id="submit_del"  name="submit_del">Xóa</button>
+                            </div>
                     </div>
-                </div>               
+                    </form>
+                </div>
             </div>
         </div>
-         <!-- Modal -->
+        <!-- Modal -->
         <br>
         <div class="container-fluid">
-        <table class="table table-bordered table-sm ">
-            <thead>
-                <tr class="table-active center-block text-center">
-                    <th>Số CCCD</th>
-                    <th>Họ và tên</th>
-                    <th>Giới tính</th>
-                    <th>Mã GPLX</th>
-                    <th>Mã hạng</th>
-                    <th>Ngày sinh</th>
-                    <th>Ngày cấp</th>
-                    <th>Ngày hết hạn</th>
-                    <th>SĐT</th>
-                    <th>Địa chỉ</th>
-                    <th>Điểm LT</th>
-                    <th>Điểm TH</th>
-                    <th>Trung tâm</th>
-                    <th>Thao tac</th>
-                </tr>
-            </thead>
-            <tbody>
-            <?php
- 
-include_once ('config.php');
-if(isset($_SESSION['username']))
-{
-          $sql2 = "EXEC proc_HoSoGPLX";   
-          if(($result2 = sqlsrv_query($conn,$sql2)) !== false)
-          {
-              while( $obj = sqlsrv_fetch_object( $result2 )) 
-              {
-                  echo "<tr>
-                  <td>$obj->SoCCCD</td>
-                  <td>$obj->Hoten</td>
-                  <td class ='center-block text-center'>$obj->GioiTinh</td>
-                  <td>$obj->MaGPLX</td>
-                  <td class ='center-block text-center'>$obj->MaHang</td>
-                  <td>$obj->NgaySinh</td>
-                  <td>$obj->NgayCap</td>
-                  <td>$obj->NgayHetHan</td>
-                  <td>$obj->SDT</td>
-                  <td>$obj->DiaChi</td>
-                  <td class ='center-block text-center'>$obj->DiemLT</td>
-                  <td class ='center-block text-center'>$obj->DiemTH</td>
-                  <td>$obj->TenTT</td>
-                  <td>
-                  <button type='button' class='btn btn-danger' idbtDel=$obj->MaGPLX data-bs-toggle='modal' data-bs-target='#modelDel'>Xóa</button>
-                  <button type='button' class='btn btn-success' idbtSua=$obj->MaGPLX data-bs-toggle='modal' data-bs-target='#modelEdit'>Sửa</button>
-                  </td>
-                  </tr>";
-              }
-          } 
-}
-else
-{
-    echo "<script>alert('Bạn chưa đăng nhập. Vui lòng đăng nhập');</script>" ;
-
-}
-?>
-                                                
-            </tbody>
-        </table>
+            <table class="table table-bordered table-sm ">
+                <thead>
+                    <tr class="table-active center-block text-center">
+                        <th>Số CCCD</th>
+                        <th>Họ và tên</th>
+                        <th>Giới tính</th>
+                        <th>Mã GPLX</th>
+                        <th>Mã hạng</th>
+                        <th>Ngày sinh</th>
+                        <th>Ngày cấp</th>
+                        <th>Ngày hết hạn</th>
+                        <th>SĐT</th>
+                        <th>Địa chỉ</th>
+                        <th>Điểm LT</th>
+                        <th>Điểm TH</th>
+                        <th>Trung tâm</th>
+                        <th>Thao tac</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php
+                        include_once ('config.php');
+                        if(isset($_SESSION['username']))
+                        {
+                                  $sql2 = "EXEC proc_HoSoGPLX";   
+                                  if(($result2 = sqlsrv_query($conn,$sql2)) !== false)
+                                  {
+                                      while( $obj = sqlsrv_fetch_object( $result2 )) 
+                                      {
+                                          echo "<tr>
+                                          <td>$obj->SoCCCD</td>
+                                          <td>$obj->Hoten</td>
+                                          <td class ='center-block text-center'>$obj->GioiTinh</td>
+                                          <td>$obj->MaGPLX</td>
+                                          <td class ='center-block text-center'>$obj->MaHang</td>
+                                          <td>$obj->NgaySinh</td>
+                                          <td>$obj->NgayCap</td>
+                                          <td>$obj->NgayHetHan</td>
+                                          <td>$obj->SDT</td>
+                                          <td>$obj->DiaChi</td>
+                                          <td class ='center-block text-center'>$obj->DiemLT</td>
+                                          <td class ='center-block text-center'>$obj->DiemTH</td>
+                                          <td>$obj->TenTT</td>
+                                          <td>
+                                          <button type='button' class='btn btn-danger delbtn' idbtDel=$obj->MaGPLX data-bs-toggle='modal' data-bs-target='#modelDel'>Xóa</button>
+                                          <button type='button' class='btn btn-success editbtn' idbtSua=$obj->MaGPLX data-bs-toggle='modal' data-bs-target='#modelEdit'>Sửa</button>                  
+                                          </td>
+                                          </tr>";
+                                      }
+                                  } 
+                        }
+                        else
+                        {
+                            echo "<script>alert('Bạn chưa đăng nhập. Vui lòng đăng nhập');</script>" ;
+                        
+                        }
+                        ?>
+                </tbody>
+            </table>
         </div>
-        <!-- Modal -->
     </body>
 </html>
 <script>  
@@ -526,6 +537,52 @@ else
            })
     }
     
+    function GetTT_Update()
+    {
+       var x = document.getElementById("up_TT").value;
+       $.ajax({
+           url: 'getTT.php',
+           method: 'POST',
+           data: 
+               {
+                   matt : x
+               },
+           success:function(data)
+           {
+               $("#up_MaTT").html(data);
+           }
+           })
+    }
+    $(document).ready(function(){
+        $('.editbtn').on('click',function(){
+            $tr = $(this).closest('tr');
+            var data = $tr.children("td").map(function(){
+                return $(this).text();
+    
+            }).get();
+            console.log(data);
+            $('#up_Name').val(data[1]);
+            $('#up_SoGPLX').val(data[3]);
+        });
+    
+    });
+    
+    $(document).ready(function(){
+        $('.delbtn').on('click',function(){
+            $tr = $(this).closest('tr');
+            var data = $tr.children("td").map(function(){
+                return $(this).text();
+    
+            }).get();
+            console.log(data);
+            var test = "<h5>Bạn có muốn xóa hồ sơ có tên là : " +data[1] +" và có mã là : " +data[3] + " </h5>";
+            $('#id_del_text').val(data[3]);
+            $('#id_del').html(test);
+    
+        });
+    
+    });
+    
     function checkNull()
                            {
                                var SoCMND = document.forms["form1"]["SoCMND"].value;
@@ -550,6 +607,3 @@ else
                                }
                            }
 </script>
-
-
-                              

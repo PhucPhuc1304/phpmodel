@@ -253,6 +253,9 @@ if (isset($_POST['submit']))
                         <i class="ti ti-lock"></i>
                         <input class="form-control" type="password" id = "password" name="password" placeholder="Mật khẩu">
                         </div>
+                        
+                        <center><label>Remember login</label>
+                        <input type="checkbox" name="remember" value="1" /></center>
                     </div>
                 </div>
                 <div class="modal-footer">
