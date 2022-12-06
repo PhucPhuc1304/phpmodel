@@ -435,7 +435,7 @@
                         <th>Điểm LT</th>
                         <th>Điểm TH</th>
                         <th>Trung tâm</th>
-                        <th>Thao tac</th>
+                        <th>Thao tác</th>
                     </tr>
                 </thead>
                 <tbody>
