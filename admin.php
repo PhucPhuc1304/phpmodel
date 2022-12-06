@@ -123,6 +123,8 @@
             zoom: 80%;
             }
         </style>
+        <title>Trang Thông Tin Giấy Phép Lái Xe</title>
+
     </head>
     </head>
     <body>
