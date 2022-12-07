@@ -41,6 +41,7 @@
         $up_diemLT = $_POST['up_diemLT'];
         $up_diemTH =$_POST['up_diemTH'];
         $sua = "update HoSoGPLX set MaHang = '$up_MaHang', NgayCapGPLX = '$up_NgayCap', NgayHetHanGPLX = '$up_NgayHetHan', DiemLT = '$up_diemLT', DiemTH = '$up_diemTH', MaTT = '$up_ma' where MaGPLX = '$up_MaGPLX'";
+        echo ($sua);
         $kq = sqlsrv_query( $conn, $sua);
         if(($kq)   !== false) 
         {
@@ -122,8 +123,6 @@
             zoom: 80%;
             }
         </style>
-        <title>Trang Thông Tin Giấy Phép Lái Xe</title>
-
     </head>
     </head>
     <body>
@@ -387,7 +386,7 @@
                                 <br>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                    <button class="btn btn-primary" type="buttom"  id="submit_edit"  name="submit_edit">Sửa hồ sơ giấy phép lái xe</button>
+                                    <button class="btn btn-primary" type="buttom"  id="submit_edit"  name="submit_edit">Thêm hồ sơ giấy phép lái xe</button>
                                 </div>
                             </div>
                         </form>
@@ -436,7 +435,7 @@
                         <th>Điểm LT</th>
                         <th>Điểm TH</th>
                         <th>Trung tâm</th>
-                        <th>Thao tác</th>
+                        <th>Thao tac</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -559,11 +558,28 @@
             $tr = $(this).closest('tr');
             var data = $tr.children("td").map(function(){
                 return $(this).text();
-    
+            var select = "<option>"+data[4]+"</option>";
+            var string = "22/07/1992"
+            var ngaycap =string.split("/");
+
+            
             }).get();
             console.log(data);
+            let ngaycap = (data[6]);
+            let NgayCapSplit = ngaycap.split("/");
+            let NgayCapSub =NgayCapSplit[2]+"-"+NgayCapSplit[1]+"-"+NgayCapSplit[0];
+            let ngayhethan = (data[7]);
+            let NgayHetHanSplit = ngayhethan.split("/");
+            let NgayHetHanSub =NgayHetHanSplit[2]+"-"+NgayHetHanSplit[1]+"-"+NgayHetHanSplit[0];
             $('#up_Name').val(data[1]);
             $('#up_SoGPLX').val(data[3]);
+            $('#up_dateCap').val(NgayCapSub);
+            $('#up_dateHan').val(NgayHetHanSub);
+            $('#up_diemLT').val(data[10]);
+            $('#up_diemTH').val(data[11]);
+
+
+            
         });
     
     });
