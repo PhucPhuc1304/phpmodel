@@ -32,7 +32,6 @@
     if(isset($_POST['submit_edit']))
     {
         if (isset($_SESSION['username'])) {
-    
         $up_MaGPLX = $_POST['up_SoGPLX'];
         $up_MaHang = $_POST['up_MaHang'];
         $up_NgayCap = $_POST['up_dateCap'];
@@ -125,7 +124,7 @@
         </style>
     </head>
     </head>
-    <body>
+    <body onload= 'disableBtn()'>
         <!-- thanh fotter -->
         <div id="module-1" class="header">
             <div class="container">
@@ -139,7 +138,7 @@
                         <li2><a href="/">Trang Chủ</a></li2>
                     </ul>
                     <ul class="nav">
-                        <li2><a href="/">Quản lý vi phạm</a></li2>
+                        <li2><a href="quanlyvipham.php">Quản lý vi phạm</a></li2>
                     </ul>
                     <i class="ti ti-unlock"></i>
                     <i class="ti ti-search"></i>
@@ -152,7 +151,14 @@
         <div class="col text-center">
             <br>
             <h2>Hệ thống quản lý giấy phép lái xe</h2>
-            <br><button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modelAdd">
+            <br><button type="button" class="btn btn-primary" id ='add'data-bs-toggle="modal" data-bs-target="#modelAdd" 
+            <?php
+            $id_role = $_SESSION['idRole'];
+            if($id_role==2) 
+            {
+                echo ' disabled=disabled ';            
+            }
+            ?>>
             Thêm hồ sơ
             </button>
             <a type="button"  href="logout.php" class="btn btn-danger" >Đăng xuất</a><br>
@@ -308,7 +314,6 @@
                                             <h6>Hạng :</h6>
                                         </label>
                                         <select class="form-select" id="up_MaHang" name="up_MaHang">
-                                            <option value="0"></option>
                                             <?php
                                                 $sql = "Select MaHang  from HangGPLX;";
                                                 $stmt = sqlsrv_query( $conn, $sql);
@@ -361,7 +366,6 @@
                                         </label>
                                         <br />
                                         <select class="form-select" onchange="GetTT_Update()" id="up_TT" name="up_TT">
-                                            <option></option>
                                             <?php
                                                 $sql = "Select TenTT  from TrungTamSatHach;";
                                                 $stmt = sqlsrv_query( $conn, $sql);
@@ -441,14 +445,14 @@
                 <tbody>
                     <?php
                         include_once ('config.php');
+                        $id_role = $_SESSION['idRole'];
                         if(isset($_SESSION['username']))
                         {
-                                  $sql2 = "EXEC proc_HoSoGPLX";   
-                                  if(($result2 = sqlsrv_query($conn,$sql2)) !== false)
-                                  {
-                                      while( $obj = sqlsrv_fetch_object( $result2 )) 
-                                      {
-                                          echo "<tr>
+                                  $sql2 = "EXEC proc_HoSoGPLX";
+                        if ($id_role == 2) {
+                            if (($result2 = sqlsrv_query($conn, $sql2)) !== false) {
+                                while ($obj = sqlsrv_fetch_object($result2)) {
+                                    echo "<tr>
                                           <td>$obj->SoCCCD</td>
                                           <td>$obj->Hoten</td>
                                           <td class ='center-block text-center'>$obj->GioiTinh</td>
@@ -463,12 +467,38 @@
                                           <td class ='center-block text-center'>$obj->DiemTH</td>
                                           <td>$obj->TenTT</td>
                                           <td>
-                                          <button type='button' class='btn btn-danger delbtn' idbtDel=$obj->MaGPLX data-bs-toggle='modal' data-bs-target='#modelDel'>Xóa</button>
-                                          <button type='button' class='btn btn-success editbtn' idbtSua=$obj->MaGPLX data-bs-toggle='modal' data-bs-target='#modelEdit'>Sửa</button>                  
+                                          <button disabled type='button' id = 'del' class='btn btn-danger delbtn'  data-bs-toggle='modal' data-bs-target='#modelDel'>Xóa</button>
+                                          <button disabled type='button' id = 'edit' class='btn btn-success editbtn' data-bs-toggle='modal' data-bs-target='#modelEdit'>Sửa</button>                  
                                           </td>
                                           </tr>";
-                                      }
-                                  } 
+                                }
+                            }
+                        }
+                        if ($id_role == 1) {
+                            if (($result2 = sqlsrv_query($conn, $sql2)) !== false) {
+                                while ($obj = sqlsrv_fetch_object($result2)) {
+                                    echo "<tr>
+                                          <td>$obj->SoCCCD</td>
+                                          <td>$obj->Hoten</td>
+                                          <td class ='center-block text-center'>$obj->GioiTinh</td>
+                                          <td>$obj->MaGPLX</td>
+                                          <td class ='center-block text-center'>$obj->MaHang</td>
+                                          <td>$obj->NgaySinh</td>
+                                          <td>$obj->NgayCap</td>
+                                          <td>$obj->NgayHetHan</td>
+                                          <td>$obj->SDT</td>
+                                          <td>$obj->DiaChi</td>
+                                          <td class ='center-block text-center'>$obj->DiemLT</td>
+                                          <td class ='center-block text-center'>$obj->DiemTH</td>
+                                          <td>$obj->TenTT</td>
+                                          <td>
+                                          <button  type='button' id = 'del' class='btn btn-danger delbtn'  data-bs-toggle='modal' data-bs-target='#modelDel'>Xóa</button>
+                                          <button  type='button' id = 'edit' class='btn btn-success editbtn' data-bs-toggle='modal' data-bs-target='#modelEdit'>Sửa</button>                  
+                                          </td>
+                                          </tr>";
+                                }
+                            }
+                        }
                         }
                         else
                         {
@@ -558,11 +588,28 @@
             $tr = $(this).closest('tr');
             var data = $tr.children("td").map(function(){
                 return $(this).text();
-    
+            var select = "<option>"+data[4]+"</option>";
+            var string = "22/07/1992"
+            var ngaycap =string.split("/");
+
+            
             }).get();
             console.log(data);
+            let ngaycap = (data[6]);
+            let NgayCapSplit = ngaycap.split("/");
+            let NgayCapSub =NgayCapSplit[2]+"-"+NgayCapSplit[1]+"-"+NgayCapSplit[0];
+            let ngayhethan = (data[7]);
+            let NgayHetHanSplit = ngayhethan.split("/");
+            let NgayHetHanSub =NgayHetHanSplit[2]+"-"+NgayHetHanSplit[1]+"-"+NgayHetHanSplit[0];
+            let MaHang = "<option selected='selected' value="+data[4]+">"+data[4]+"</option>";
+            console.log(MaHang);
+
             $('#up_Name').val(data[1]);
             $('#up_SoGPLX').val(data[3]);
+            $('#up_dateCap').val(NgayCapSub);
+            $('#up_dateHan').val(NgayHetHanSub);
+            $('#up_diemLT').val(data[10]);
+            $('#up_diemTH').val(data[11]);
         });
     
     });
@@ -582,7 +629,16 @@
         });
     
     });
+    function disableBtn() 
+    {
+        <?php
+        $id_role = $_SESSION['idRole'];
+            if($id_role==1)
+            {
     
+            }
+        ?>
+    }
     function checkNull()
                            {
                                var SoCMND = document.forms["form1"]["SoCMND"].value;
@@ -606,4 +662,5 @@
                                    return true; 
                                }
                            }
+
 </script>

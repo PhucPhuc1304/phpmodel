@@ -15,7 +15,7 @@ if (empty($_SESSION['username']))
  
       parse_str($_COOKIE[$cookie_name]);
  
-      $sql2 = "select * from Account where username='$usr' and password='$hash'";
+      $sql2 = "select * from User where username='$usr' and password='$hash'";
  
       $result2 = sqlsrv_query($sql2, $conn);
       
@@ -50,7 +50,6 @@ if (isset($_POST['submit']))
  
   $password = ($_POST['password']);
  
-  $a_check = ((isset($_POST['remember']) != 0) ? 1 : "");
  
   if ($username == "" || $password == "")
   {
@@ -65,7 +64,7 @@ if (isset($_POST['submit']))
  
     $params = array();
     $options =  array( "Scrollable" => SQLSRV_CURSOR_KEYSET );
-    $sql = "select * from Account where username='$username' and password='$password'";
+    $sql = "select * from [dbo].[User] where username='$username' and password='$password'";
     $params = array();
     $options =  array( "Scrollable" => SQLSRV_CURSOR_KEYSET );
     $result = sqlsrv_query( $conn, $sql , $params, $options ); 
@@ -79,28 +78,17 @@ if (isset($_POST['submit']))
     }
  
     $row = sqlsrv_fetch_array($result);
- 
     $f_user = $row['username'];
- 
     $f_pass = $row['password'];
- 
+    $f_role = $row['idRole'];
     if ($f_user == $username && $f_pass == $password)
     {
  
       $_SESSION['username'] = $f_user;
- 
       $_SESSION['password'] = $f_pass;
- 
-      if ($a_check == 1)
-      {
- 
-        setcookie($cookie_name, 'usr=' . $f_user . '&hash=' . $f_pass, time() + $cookie_time);
- 
-      }
- 
+      $_SESSION['idRole'] = $f_role;
       header('location:admin.php'); //chuyền qua trang đăng nhập thành công
       exit;
- 
     }
     else
     {
