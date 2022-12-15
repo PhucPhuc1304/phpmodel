@@ -1,5 +1,5 @@
 <?php
-    include("connection.php");
+    include("config.php");
     $k = $_POST['id'];
     $k= trim($k);
     $sql="Select Holot+' '+ ten as Hoten from LyLich where SoCCCD ='$k';";

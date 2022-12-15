@@ -1,6 +1,6 @@
 <!doctype html>
 <?php
-    include("connection.php");
+    include("config.php");
 ?>
 <html lang="vi">
   <head>

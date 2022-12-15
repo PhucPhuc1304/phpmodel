@@ -12,6 +12,78 @@
             echo "<script>window.location.href ='admin.php'</script>";
 
         }
+    if (isset($_POST['submit_add']) && $id_role !== 1) 
+    {
+        $MaBB = $_POST['maBienBan'];
+        $MaGPLX = $_POST['maGPLX'];
+        $NgayLap = $_POST['dateLap'];
+        $maVP = $_POST['maVP'];
+        $themVP = "insert into BienBanViPham values('$MaBB','$MaGPLX','$NgayLap')";
+        $themCTVP = "insert into CT_ViPham values('$MaBB','$maVP')";
+        $kq = sqlsrv_query($conn, $themVP);
+        $kq2 = sqlsrv_query($conn, $themCTVP);
+        if (($kq) !== false && $kq2 !== false)
+        {
+            echo "<script>alert('Thêm hồ sơ thành công');</script>";
+            echo "<script>window.location.href ='quanlyvipham.php'</script>";
+    
+        } else {
+            echo "<script>alert('Sai thông tin. Vui lòng nhập lại');</script>";
+        }
+    }    
+    if (isset($_POST['submit_edit']) && $id_role !== 1) 
+    {
+        $up_MaBB = $_POST['up_maBienBan'];
+        $up_MaBB_read = $_POST['up_maBienBan_read'];
+
+        $up_MaGPLX = $_POST['up_maGPLX'];
+        $up_NgayLap = $_POST['up_dateLap'];
+        $up_maVP = $_POST['up_maVP'];
+        $upVP = "update BienBanViPham set MaBienBan = '$up_MaBB', MaGPLX = '$up_MaGPLX', NgayLap = ' $up_NgayLap' where MaBienBan = '$up_MaBB_read'";
+        $upCTVP = "update CT_ViPham set MaViPham = '$up_maVP' where MaBienBan = '$up_MaBB'";
+        $kq = sqlsrv_query($conn, $upVP);
+        $kq2 = sqlsrv_query($conn, $upCTVP);
+        if (($kq) !== false && $kq2 !== false)
+        {
+            echo "<script>alert('Sửa hồ sơ thành công');</script>";
+            echo "<script>window.location.href ='quanlyvipham.php'</script>";
+    
+        } else {
+            echo "<script>alert('Sai thông tin. Vui lòng nhập lại');</script>";
+        }
+    }
+    if (isset($_POST['submit_del']) && $id_role !== 1) 
+    {
+        $del_MaBB = $_POST['id_del_text'];
+        $delvp = "delete from BienBanViPham where MaBienBan = '$del_MaBB'";
+        $delctvp = "delete from CT_ViPham where MaBienBan = '$del_MaBB'";
+        $kq = sqlsrv_query($conn, $delvp);
+        $kq2 = sqlsrv_query($conn, $delctvp);
+        if (($kq) !== false && $kq2 !== false)
+        {
+            echo "<script>alert('Xóa hồ sơ thành công');</script>";
+            echo "<script>window.location.href ='quanlyvipham.php'</script>";
+    
+        } else {
+            echo "<script>alert('Sai thông tin. Vui lòng nhập lại');</script>";
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+    }
+    else
+    {
+        echo "<script>alert('Vui lòng đăng nhập');</script>" ;
     }
     
     ?>
@@ -72,7 +144,7 @@
                     </ul>
                     <i class="ti ti-unlock"></i>
                     <i class="ti ti-search"></i>
-                    <i class="ti ">Xin chào  <?= htmlspecialchars($_SESSION['username']) ?> </i>
+                    <i class="ti ">Xin chào  <?php echo ($_SESSION['nameUser']);?> </i>
                 </div>
             </div>
         </div>
@@ -102,30 +174,44 @@
                                 <label>
                                     <h6>Nhập mã biên bản :</h6>
                                 </label>
-                                <input type="text" name="maBienBan" id="maBienBan" class="form-control" placeholder="Vui lòng nhập mã biên bản" />
+                                <input type="text" name="maBienBan" id="maBienBan" class="form-control" placeholder="Vui lòng nhập mã biên bản" /><br>
                                 <label>
                                     <h6>Nhập mã mã giấy phép lái xe :</h6>
                                 </label>
-                                <input type="text" name="maGPLX" id="maGPLX" class="form-control" placeholder="Vui lòng nhập mã GPLX" />
+                                <input type="text" name="maGPLX" id="maGPLX" class="form-control" placeholder="Vui lòng nhập mã GPLX" /><br>
                                 <div id="listGPLX"></div>
-                                <br />
                                 <label>
                                     <h6>Nội dung vi phạm :</h6>
                                 </label>
-                                <select id="test" class="form-select" disabled> </select>
-
+                                <select id="NoiDung" onchange="GetNoiDung()" class="form-select">
+                                <option value="0"></option>
+                                            <?php
+                                                $sql = "select NoiDungViPham from LoiViPham;";
+                                                $stmt = sqlsrv_query( $conn, $sql);
+                                                while( $row = sqlsrv_fetch_array( $stmt, SQLSRV_FETCH_ASSOC) ) 
+                                                {
+                                                ?>
+                                            <option value="<?php echo($row['NoiDungViPham'])?>">
+                                                <?php echo($row['NoiDungViPham']) ?>
+                                            </option>
+                                            <?php
+                                                }
+                                                ?>
+                                </select><br> 
                                 <div class="row">
                                     <div class="col-md-6">
                                         <label class="form-label">
                                             <h6>Ngày lập :</h6>
                                         </label>
-                                        <input type="date" class="form-control" id="dateLap" name="dateLap" />
+                                        <input type="date" class="form-control" id="dateLap" name="dateLap" /><br>
                                     </div>
                                     <div class="col-md-6">
                                         <label class="form-label">
                                             <h6>Tiền phạt : </h6>
                                         </label>
-                                        <input type="text" name="tienPhat" id="tienPhat" class="form-control"/>
+                                        <input type="text" name="tienPhat" id="tienPhat" class="form-control" readonly/><br>
+                                        <input hidden type="text" name="maVP" id="maVP" class="form-control" readonly/>
+
                                     </div><br>
                                 </div>
                                 <br>
@@ -153,38 +239,54 @@
                         <form name="form1" action=""  method="post">
                             <div class="container" style="width: 750px;">
                                 <label>
-                                    <h6>Nhập mã biên bản :</h6>
+                                    <h6>Mã biên bản :</h6>
                                 </label>
-                                <input type="text" name="maBienBan" id="maBienBan" class="form-control" placeholder="Vui lòng nhập mã biên bản" />
+                                <input type="text" name="up_maBienBan" id="up_maBienBan" class="form-control" placeholder="Vui lòng nhập mã biên bản" /><br>
+                                <input hidden type="text" name="up_maBienBan_read" id="up_maBienBan_read" class="form-control" readonly/>
+
                                 <label>
-                                    <h6>Nhập mã mã giấy phép lái xe :</h6>
+                                    <h6>Mã giấy phép lái xe :</h6>
                                 </label>
-                                <input type="text" name="maGPLX" id="maGPLX" class="form-control" placeholder="Vui lòng nhập mã GPLX" />
+                                <input type="text" name="up_maGPLX" id="up_maGPLX" class="form-control" placeholder="Vui lòng nhập mã GPLX"  /><br>
                                 <div id="listGPLX"></div>
-                                <br />
                                 <label>
                                     <h6>Nội dung vi phạm :</h6>
                                 </label>
-                                <select id="test" class="form-select" disabled> </select>
-
+                                <select id="up_NoiDung" onchange="up_GetNoiDung()" class="form-select">
+                                <option value="0"></option>
+                                            <?php
+                                                $sql = "select NoiDungViPham from LoiViPham;";
+                                                $stmt = sqlsrv_query( $conn, $sql);
+                                                while( $row = sqlsrv_fetch_array( $stmt, SQLSRV_FETCH_ASSOC) ) 
+                                                {
+                                                ?>
+                                            <option value="<?php echo($row['NoiDungViPham'])?>">
+                                                <?php echo($row['NoiDungViPham']) ?>
+                                            </option>
+                                            <?php
+                                                }
+                                                ?>
+                                </select><br> 
                                 <div class="row">
                                     <div class="col-md-6">
                                         <label class="form-label">
                                             <h6>Ngày lập :</h6>
                                         </label>
-                                        <input type="date" class="form-control" id="dateLap" name="dateLap" />
+                                        <input type="date" class="form-control" id="up_dateLap" name="up_dateLap" /><br>
                                     </div>
                                     <div class="col-md-6">
                                         <label class="form-label">
                                             <h6>Tiền phạt : </h6>
                                         </label>
-                                        <input type="text" name="tienPhat" id="tienPhat" class="form-control"/>
+                                        <input type="text" name="up_tienPhat" id="up_tienPhat" class="form-control" readonly/><br>
+                                        <input hidden type="text" name="up_maVP" id="up_maVP" class="form-control" readonly/>
+
                                     </div><br>
                                 </div>
                                 <br>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                    <button class="btn btn-primary" type="buttom"  id="submit_add"  name="submit_add">Thêm biên bản vi phạm</button>
+                                    <button class="btn btn-primary" type="buttom"  id="submit_edit"  name="submit_edit">Sửa biên bản vi phạm</button>
                                 </div>
                             </div>
                         </form>
@@ -204,7 +306,7 @@
                     <div class="modal-body">
                         <form name="form1" action=""  method="post">
                             <div id = 'id_del'></div>
-                            <input type="text" class="form-control" id="id_del_text" name="id_del_text" hidden/>
+                            <input type="text" class="form-control" id="id_del_text" name="id_del_text"hidden/>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                                 <button class="btn btn-danger" type="buttom"  id="submit_del"  name="submit_del">Xóa</button>
@@ -216,7 +318,8 @@
         </div>
         <!-- Modal -->
         <br>
-        <div class="container-fluid">
+        <div>
+        <div class="container-lg">
             <table class="table table-bordered">
                 <thead>
                     <tr class="table-active center-block ">
@@ -265,103 +368,88 @@
 </html>
 <script>  
     $(document).ready(function(){  
-         $('#SoCMND').keyup(function(){  
-              var query = $(this).val();  
+         $('#maGPLX').keyup(function(){  
+              var query = $(this).val(); 
               if(query != '')  
               {  
                    $.ajax({  
-                        url:"SoCMND.php",  
+                        url:"SoGPLX.php",  
                         method:"POST",  
                         data:{query:query},  
                         success:function(data)  
                         {  
-                             $('#listCMND').fadeIn();  
-                             $('#listCMND').html(data);  
+                             $('#listGPLX').fadeIn();  
+                             $('#listGPLX').html(data);  
                         }  
                    });  
               }  
          });  
          $(document).on('click', 'li', function(){  
-              $('#SoCMND').val($(this).text()); 
-              $('#listCMND').fadeOut();  
+              $('#maGPLX').val($(this).text()); 
+              $('#listGPLX').fadeOut();  
          });  
     
-         $(document).on('click', 'li', function(){ 
-           var x = document.getElementById("SoCMND").value;
-           $.ajax({
-           url: 'getthongtin.php',
-           method: 'POST',
-           data: 
-               {
-                   id : x
-               },
-           success:function(data)
-           {
-               $("#test").html(data);
-           }
-           })
-         });  
     });  
-    function GetTT()
+    function GetNoiDung()
     {
-       var x = document.getElementById("TT").value;
+       var x = document.getElementById("NoiDung").value;
        $.ajax({
-           url: 'getTT.php',
+           url: 'getnoidung.php',
            method: 'POST',
            data: 
                {
-                   matt : x
+                   noiDung : x
                },
+               dataType: "JSON",
            success:function(data)
            {
-               $("#MaTT").html(data);
+            console.log(data.tienphat);
+
+                $('#tienPhat').val(data.tienphat);
+                $('#maVP').val(data.mavipham);
            }
            })
     }
-    
-    function GetTT_Update()
+    function up_GetNoiDung()
     {
-       var x = document.getElementById("up_TT").value;
+       var x = document.getElementById("up_NoiDung").value;
        $.ajax({
-           url: 'getTT.php',
+           url: 'getnoidung.php',
            method: 'POST',
            data: 
                {
-                   matt : x
+                   noiDung : x
                },
+               dataType: "JSON",
            success:function(data)
            {
-               $("#up_MaTT").html(data);
+            console.log(data.tienphat);
+
+                $('#up_tienPhat').val(data.tienphat);
+                $('#up_maVP').val(data.mavipham);
            }
            })
     }
+
+
+
     $(document).ready(function(){
         $('.editbtn').on('click',function(){
             $tr = $(this).closest('tr');
             var data = $tr.children("td").map(function(){
                 return $(this).text();
-            var select = "<option>"+data[4]+"</option>";
-            var string = "22/07/1992"
-            var ngaycap =string.split("/");
-
             
+
             }).get();
             console.log(data);
-            let ngaycap = (data[6]);
-            let NgayCapSplit = ngaycap.split("/");
-            let NgayCapSub =NgayCapSplit[2]+"-"+NgayCapSplit[1]+"-"+NgayCapSplit[0];
-            let ngayhethan = (data[7]);
-            let NgayHetHanSplit = ngayhethan.split("/");
-            let NgayHetHanSub =NgayHetHanSplit[2]+"-"+NgayHetHanSplit[1]+"-"+NgayHetHanSplit[0];
-            let MaHang = "<option selected='selected' value="+data[4]+">"+data[4]+"</option>";
-            console.log(MaHang);
-
-            $('#up_Name').val(data[1]);
-            $('#up_SoGPLX').val(data[3]);
-            $('#up_dateCap').val(NgayCapSub);
-            $('#up_dateHan').val(NgayHetHanSub);
-            $('#up_diemLT').val(data[10]);
-            $('#up_diemTH').val(data[11]);
+            let NgayLap = (data[3]);
+            let NgayLapSplit = NgayLap.split("/");
+            let NgayLapSub =NgayLapSplit[2]+"-"+NgayLapSplit[1]+"-"+NgayLapSplit[0];
+            $('#up_maBienBan').val(data[0]);
+            $('#up_maBienBan_read').val(data[0]);
+            $('#up_maGPLX').val(data[1]);
+            $('#up_dateLap').val(NgayLapSub);
+            
         });
     
     });
@@ -371,11 +459,10 @@
             $tr = $(this).closest('tr');
             var data = $tr.children("td").map(function(){
                 return $(this).text();
-    
             }).get();
             console.log(data);
             var test = "<h5>Bạn có muốn xóa biên bản có mã là : " +data[0] +" và có mã giấy phép lái xe là là : " +data[1] + " </h5>";
-            $('#id_del_text').val(data[3]);
+            $('#id_del_text').val(data[0]);
             $('#id_del').html(test);
     
         });

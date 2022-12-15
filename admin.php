@@ -26,6 +26,8 @@
         else
         {
             echo "<script>alert('Vui lòng đăng nhập');</script>" ;
+            echo "<script>window.location.href ='index.php'</script>";
+
         }
     }
     
@@ -56,6 +58,8 @@
     else
     {
         echo "<script>alert('Vui lòng đăng nhập');</script>" ;
+        echo "<script>window.location.href ='index.php'</script>";
+
     }
     }
     
@@ -81,6 +85,7 @@
     else
     {
         echo "<script>alert('Vui lòng đăng nhập');</script>" ;
+        echo "<script>window.location.href ='index.php'</script>";
     }
     }
     
@@ -142,7 +147,7 @@
                     </ul>
                     <i class="ti ti-unlock"></i>
                     <i class="ti ti-search"></i>
-                    <i class="ti ">Xin chào  <?= htmlspecialchars($_SESSION['username']) ?> </i>
+                    <i class="ti ">Xin chào  <?php echo ($_SESSION['nameUser']);?> </i>
                 </div>
             </div>
         </div>
@@ -214,7 +219,7 @@
                                         </select>
                                     </div>
                                 </div>
-                                <div class="row">
+                                <br><div class="row">
                                     <div class="col-md-6">
                                         <label class="form-label">
                                             <h6>Ngày cấp :</h6>
@@ -245,7 +250,7 @@
                                 </div>
                                 <br />
                                 <div class="row">
-                                    <div class="col-md-10">
+                                    <div >
                                         <label>
                                             <h6>Trung tâm sát hạch :</h6>
                                         </label>
@@ -270,13 +275,13 @@
                                         <label>
                                             <h6>­</h6>
                                         </label>
-                                        <select class="form-select" id="MaTT" name="MaTT" readonly> </select>
+                                        <select hidden class="form-select" id="MaTT" name="MaTT" readonly> </select>
                                     </div>
                                 </div>
-                                <br>
+                                
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                    <button class="btn btn-primary" type="buttom"  id="submit_add"  name="submit_add">Thêm hồ sơ giấy phép lái xe</button>
+                                    <button class="btn btn-primary" type="buttom"  id="submit_add"  name="submit_add">Thêm hồ sơ</button>
                                 </div>
                             </div>
                         </form>
@@ -329,6 +334,7 @@
                                         </select>
                                     </div>
                                 </div>
+                                <br>
                                 <div class="row">
                                     <div class="col-md-6">
                                         <label class="form-label">
@@ -343,8 +349,7 @@
                                         <input type="date" class="form-control" id="up_dateHan" name="up_dateHan" />
                                     </div>
                                 </div>
-                                <br />
-                                <div class="row">
+                                <br><div class="row">
                                     <div class="col-md-6">
                                         <label class="form-label">
                                             <h6>Điểm lý thuyết :</h6>
@@ -360,7 +365,7 @@
                                 </div>
                                 <br />
                                 <div class="row">
-                                    <div class="col-md-10">
+                                    <div>
                                         <label>
                                             <h6>Trung tâm sát hạch :</h6>
                                         </label>
@@ -384,13 +389,13 @@
                                         <label>
                                             <h6>­</h6>
                                         </label>
-                                        <select class="form-select" id="up_MaTT" name="up_MaTT" readonly> </select>
+                                        <select hidden class="form-select" id="up_MaTT" name="up_MaTT" readonly> </select>
                                     </div>
                                 </div>
                                 <br>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                    <button class="btn btn-primary" type="buttom"  id="submit_edit"  name="submit_edit">Thêm hồ sơ giấy phép lái xe</button>
+                                    <button class="btn btn-primary" type="buttom"  id="submit_edit"  name="submit_edit">Chỉnh sửa hồ sơ</button>
                                 </div>
                             </div>
                         </form>

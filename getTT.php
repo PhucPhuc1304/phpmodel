@@ -1,5 +1,5 @@
 <?php
-    include("connection.php");
+    include("config.php");
     $k = $_POST['matt'];
     $k= trim($k);
     $sql = "Select MaTT from TrungTamSatHach where TenTT LIKE N'$k'";

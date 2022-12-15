@@ -62,12 +62,9 @@ if (isset($_POST['submit']))
   else
   {
  
-    $params = array();
-    $options =  array( "Scrollable" => SQLSRV_CURSOR_KEYSET );
+   
     $sql = "select * from [dbo].[User] where username='$username' and password='$password'";
-    $params = array();
-    $options =  array( "Scrollable" => SQLSRV_CURSOR_KEYSET );
-    $result = sqlsrv_query( $conn, $sql , $params, $options ); 
+    $result = sqlsrv_query( $conn, $sql ); 
     if (!$result)
     {
  
@@ -81,12 +78,15 @@ if (isset($_POST['submit']))
     $f_user = $row['username'];
     $f_pass = $row['password'];
     $f_role = $row['idRole'];
+    $f_Hoten = $row['nameUser'];
+
     if ($f_user == $username && $f_pass == $password)
     {
  
       $_SESSION['username'] = $f_user;
       $_SESSION['password'] = $f_pass;
       $_SESSION['idRole'] = $f_role;
+      $_SESSION['nameUser'] = $f_Hoten;
       header('location:admin.php'); //chuyền qua trang đăng nhập thành công
       exit;
     }
@@ -242,8 +242,7 @@ if (isset($_POST['submit']))
                         <input class="form-control" type="password" id = "password" name="password" placeholder="Mật khẩu">
                         </div>
                         
-                        <center><label>Remember login</label>
-                        <input type="checkbox" name="remember" value="1" /></center>
+                        
                     </div>
                 </div>
                 <div class="modal-footer">
