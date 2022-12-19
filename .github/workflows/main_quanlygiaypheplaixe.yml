@@ -56,5 +56,5 @@ jobs:
         with:
           app-name: 'quanlygiaypheplaixe'
           slot-name: 'Production'
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_D2F01D04B15F4E9FBFA7321CCE25C58C }}
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_09EEF164DE45419896D33DCEC21F4652 }}
           package: .
